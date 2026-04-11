@@ -7,49 +7,17 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest
-    permissions:
-      contents: read #This is required for actions/checkout
-
+  build_and_deploy_job:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
+      - name: Upload files
+        uses: Azure/static-web-apps-deploy@v1
         with:
-          node-version: '20.x'
-
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-      
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: .
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-      
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
-        with:
-          app-name: 'chickachickachika'
-          slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1F4E26D1F63F4764B1E3D208907C34E3 }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "/"
+          output_location: "/"
