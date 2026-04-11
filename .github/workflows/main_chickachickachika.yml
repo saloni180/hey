@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - chickachickachika
+name: Deploy to Azure Web App
 
 on:
   push:
@@ -9,15 +9,15 @@ on:
       - main
 
 jobs:
-  build_and_deploy_job:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Upload files
-        uses: Azure/static-web-apps-deploy@v1
+
+      # Zip your repo and deploy directly to App Service
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "/"
-          output_location: "/"
+          app-name: "chickachickachika-b4enakfkama4g8am"
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: .
